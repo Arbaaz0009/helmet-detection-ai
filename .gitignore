@@ -163,27 +163,39 @@ cython_debug/
 #  *.iws
 
 # YOLO specific
-runs/
-*.pt
+# runs/  # Commented out to allow model files for deployment
 *.pth
 *.weights
+
+# Allow specific model files for deployment
+!runs/detect/train4/weights/best.pt
+!runs/detect/train3/weights/best.pt
+!runs/detect/train2/weights/best.pt
+!runs/detect/train/weights/best.pt
 
 # Dataset files (usually large)
 dataset/
 images/
 labels/
 annotations/
-*.jpg
-*.jpeg
-*.png
 *.xml
 *.txt
+
+# Allow specific image files for documentation
+!runs/detect/*/results.png
+!runs/detect/*/confusion_matrix.png
+!runs/detect/*/confusion_matrix_normalized.png
 
 # Model files (usually very large)
 models/
 checkpoints/
 *.onnx
 *.engine
+
+# Ignore large training images but keep model
+runs/detect/*/train_batch*.jpg
+runs/detect/*/val_batch*.jpg
+runs/detect/*/labels.jpg
 
 # Logs
 logs/

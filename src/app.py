@@ -12,12 +12,20 @@ Date: 2025
 """
 
 import streamlit as st
-from ultralytics import YOLO
 import cv2
 import numpy as np
 from PIL import Image
 import tempfile
 import os
+
+# Try to import ultralytics with better error handling
+try:
+    from ultralytics import YOLO
+    ULTRALYTICS_AVAILABLE = True
+except ImportError as e:
+    st.error(f"❌ Error importing ultralytics: {str(e)}")
+    st.error("Please ensure ultralytics is properly installed. Check requirements.txt")
+    ULTRALYTICS_AVAILABLE = False
 
 # Set page config
 st.set_page_config(
@@ -30,6 +38,9 @@ st.set_page_config(
 # Load your YOLOv8 trained model with error handling
 @st.cache_resource
 def load_model():
+    if not ULTRALYTICS_AVAILABLE:
+        return None
+        
     try:
         # Try different possible model paths
         model_paths = [
@@ -45,8 +56,17 @@ def load_model():
                 st.success(f"✅ Model loaded from: {path}")
                 return YOLO(path)
         
-        st.error("❌ No model file found. Please check if the model exists in the expected locations.")
-        return None
+        # If no local model found, try to download a pre-trained model
+        st.warning("⚠️ No local model found. Downloading pre-trained YOLOv8n model...")
+        try:
+            model = YOLO("yolov8n.pt")
+            st.success("✅ Pre-trained YOLOv8n model loaded successfully!")
+            st.info("ℹ️ Note: This is a general-purpose model, not specifically trained for helmets.")
+            return model
+        except Exception as download_error:
+            st.error(f"❌ Failed to download model: {str(download_error)}")
+            return None
+            
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
         return None
