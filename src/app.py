@@ -12,11 +12,19 @@ Date: 2025
 """
 
 import streamlit as st
-import cv2
 import numpy as np
 from PIL import Image
 import tempfile
 import os
+
+# Try to import cv2 with better error handling
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError as e:
+    st.error(f"❌ Error importing OpenCV (cv2): {str(e)}")
+    st.error("Please ensure opencv-python-headless is properly installed.")
+    CV2_AVAILABLE = False
 
 # Try to import ultralytics with better error handling
 try:
@@ -39,6 +47,10 @@ st.set_page_config(
 @st.cache_resource
 def load_model():
     if not ULTRALYTICS_AVAILABLE:
+        return None
+    
+    if not CV2_AVAILABLE:
+        st.error("❌ OpenCV is required for image processing but not available.")
         return None
         
     try:
@@ -100,7 +112,11 @@ if uploaded_file is not None and model is not None:
             annotated_img = result.plot()
             
             # Convert BGR to RGB for display
-            annotated_img_rgb = cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB)
+            if CV2_AVAILABLE:
+                annotated_img_rgb = cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB)
+            else:
+                # Fallback: assume image is already in RGB format
+                annotated_img_rgb = annotated_img
             
             # Display the result image
             st.image(annotated_img_rgb, caption='Detection Result', use_container_width=True)
