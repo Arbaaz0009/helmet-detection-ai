@@ -55,6 +55,9 @@ def load_model():
 model = load_model()
 
 st.title("\U0001f996 Helmet Compliance Detection App")
+st.warning(
+    "\u26A0\ufe0f Note: This helmet detection model was trained with a small number of epochs and limited parameters due to hardware constraints (CPU-only training). As a result, detection accuracy may be lower on some images, especially in challenging conditions."
+)
 st.write("Upload an image below to detect helmets.")
 
 # Upload file widget
@@ -64,7 +67,7 @@ if uploaded_file is not None and model is not None:
     try:
         # Display the uploaded image
         image = Image.open(uploaded_file)
-        st.image(image, caption='Uploaded Image', use_container_width=True)
+        st.image(image, caption='Uploaded Image', width=350)
 
         # Convert PIL image to numpy array for processing
         img_array = np.array(image)
@@ -83,7 +86,7 @@ if uploaded_file is not None and model is not None:
             annotated_img_rgb = cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB)
             
             # Display the result image
-            st.image(annotated_img_rgb, caption='Detection Result', use_container_width=True)
+            st.image(annotated_img_rgb, caption='Detection Result', width=350)
             
             # Display detection information
             if result.boxes is not None:

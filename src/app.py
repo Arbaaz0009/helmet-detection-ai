@@ -22,7 +22,7 @@ import os
 # Set page config
 st.set_page_config(
     page_title="Safety Helmet Detection",
-    page_icon="🪖",
+    page_icon="\U0001f996",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -42,19 +42,22 @@ def load_model():
         
         for path in model_paths:
             if os.path.exists(path):
-                st.success(f"✅ Model loaded from: {path}")
+                st.success(f"\u2705 Model loaded from: {path}")
                 return YOLO(path)
         
-        st.error("❌ No model file found. Please check if the model exists in the expected locations.")
+        st.error("\u274c No model file found. Please check if the model exists in the expected locations.")
         return None
     except Exception as e:
-        st.error(f"❌ Error loading model: {str(e)}")
+        st.error(f"\u274c Error loading model: {str(e)}")
         return None
 
 # Load model
 model = load_model()
 
-st.title("🪖 Helmet Compliance Detection App")
+st.title("\U0001f996 Helmet Compliance Detection App")
+st.warning(
+    "\u26A0\ufe0f Note: This helmet detection model was trained with a small number of epochs and limited parameters due to hardware constraints (CPU-only training). As a result, detection accuracy may be lower on some images, especially in challenging conditions."
+)
 st.write("Upload an image below to detect helmets.")
 
 # Upload file widget
@@ -64,13 +67,13 @@ if uploaded_file is not None and model is not None:
     try:
         # Display the uploaded image
         image = Image.open(uploaded_file)
-        st.image(image, caption='Uploaded Image', use_container_width=True)
+        st.image(image, caption='Uploaded Image', width=350)
 
         # Convert PIL image to numpy array for processing
         img_array = np.array(image)
         
         # Run detection without saving to file
-        with st.spinner("🔍 Running detection..."):
+        with st.spinner("\U0001f50d Running detection..."):
             results = model.predict(source=img_array, conf=0.5, save=False)
         
         if results and len(results) > 0:
@@ -83,12 +86,12 @@ if uploaded_file is not None and model is not None:
             annotated_img_rgb = cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB)
             
             # Display the result image
-            st.image(annotated_img_rgb, caption='Detection Result', use_container_width=True)
+            st.image(annotated_img_rgb, caption='Detection Result', width=350)
             
             # Display detection information
             if result.boxes is not None:
                 num_detections = len(result.boxes)
-                st.success(f"✅ Detection complete! Found {num_detections} object(s)")
+                st.success(f"\u2705 Detection complete! Found {num_detections} object(s)")
                 
                 # Show detection details
                 if num_detections > 0:
@@ -99,20 +102,20 @@ if uploaded_file is not None and model is not None:
                         class_name = result.names[cls]
                         st.write(f"Object {i+1}: {class_name} (Confidence: {conf:.2f})")
             else:
-                st.warning("⚠️ No objects detected in the image.")
+                st.warning("\u26a0\ufe0f No objects detected in the image.")
                 
         else:
-            st.error("❌ Detection failed. Please try again.")
+            st.error("\u274c Detection failed. Please try again.")
             
     except Exception as e:
-        st.error(f"❌ Error during detection: {str(e)}")
+        st.error(f"\u274c Error during detection: {str(e)}")
         st.error("Please check if the image is valid and try again.")
 
 elif uploaded_file is not None and model is None:
-    st.error("❌ Model not loaded. Please check the model file and restart the app.")
+    st.error("\u274c Model not loaded. Please check the model file and restart the app.")
 
 # Add some helpful information
-with st.expander("ℹ️ About this app"):
+with st.expander("\u2139\ufe0f About this app"):
     st.write("""
     This app uses a YOLOv8 model trained to detect helmets in images. 
     
@@ -125,5 +128,4 @@ with st.expander("ℹ️ About this app"):
     - The model is trained to detect helmet compliance
     - Confidence threshold is set to 0.5
     - Results show bounding boxes and confidence scores
-    """)
-
+    """) 
