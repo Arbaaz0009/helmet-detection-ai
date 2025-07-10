@@ -43,7 +43,7 @@ This Safety Helmet Detection project was developed by five students during the I
 ## Project Timeline
 - **Start Date:** June 22, 2025
 - **End Date:** July 5, 2025
-- **Duration:** 2 weeks (Intel AI4MFG Internship Program)
+
 
 ## Technologies Used
 - **Frontend:** Streamlit, HTML/CSS
