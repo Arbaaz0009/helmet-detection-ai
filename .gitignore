@@ -163,27 +163,11 @@ cython_debug/
 #  *.iws
 
 # YOLO specific
-runs/
-*.pt
-*.pth
-*.weights
 
 # Dataset files (usually large)
-dataset/
-images/
-labels/
-annotations/
-*.jpg
-*.jpeg
-*.png
-*.xml
-*.txt
+
 
 # Model files (usually very large)
-models/
-checkpoints/
-*.onnx
-*.engine
 
 # Logs
 logs/
@@ -206,7 +190,7 @@ Thumbs.db
 *~
 
 # Streamlit
-.streamlit/
+# .streamlit/
 
 # Jupyter
 .ipynb_checkpoints/
